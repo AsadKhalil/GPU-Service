@@ -31,8 +31,8 @@ DREAMO_GUIDANCE_SCALE = float(os.getenv("DREAMO_GUIDANCE_SCALE", "3.5"))
 DREAMO_WIDTH = int(os.getenv("DREAMO_WIDTH", "768"))
 DREAMO_HEIGHT = int(os.getenv("DREAMO_HEIGHT", "1024"))
 
-# Cloned DreamO without `pip install -e .`? Set to repo root (dir containing
-# the `dreamo/` package folder).
+# Path to cloned https://github.com/bytedance/DreamO (folder that contains
+# dreamo/dreamo_pipeline.py). Pip cannot install DreamO; see dreamo_inference.py.
 DREAMO_SRC = os.getenv("DREAMO_SRC", "").strip()
 
 # ── Base URL for result links ────────────────────────────────────────────────

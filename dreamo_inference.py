@@ -17,6 +17,71 @@ logger = logging.getLogger(__name__)
 _pipeline = None
 
 
+def _dreamo_import_ok() -> bool:
+    try:
+        import importlib
+
+        importlib.import_module("dreamo.dreamo_pipeline")
+        return True
+    except ImportError:
+        return False
+
+
+def _ensure_dreamo_path() -> None:
+    """
+    ByteDance/DreamO's GitHub repo has no pip install metadata (pyproject.toml is
+    only Ruff/Black). ``pip install git+...`` does not register ``dreamo``.
+    We must put the *clone root* (the folder that contains ``dreamo/``) on
+    ``sys.path`` — not the inner ``dreamo`` folder.
+    """
+    if _dreamo_import_ok():
+        return
+
+    here = Path(__file__).resolve().parent
+    candidates: list[Path] = []
+    if cfg.DREAMO_SRC:
+        candidates.append(Path(cfg.DREAMO_SRC).expanduser().resolve())
+    candidates.extend(
+        [
+            here / "DreamO",
+            here / "dreamo-main",
+            here.parent / "DreamO",
+            here.parent / "dreamo-main",
+            here.parent / "dreamo",
+        ]
+    )
+
+    seen: set[Path] = set()
+    for root in candidates:
+        root = root.resolve()
+        if root in seen:
+            continue
+        seen.add(root)
+        marker = root / "dreamo" / "dreamo_pipeline.py"
+        if not marker.is_file():
+            continue
+        s = str(root)
+        inserted = False
+        if s not in sys.path:
+            sys.path.insert(0, s)
+            inserted = True
+        if _dreamo_import_ok():
+            logger.info("DreamO: using repo at %s", root)
+            return
+        if inserted:
+            sys.path.remove(s)
+
+    hint = (
+        "DreamO is not pip-installable from GitHub (no [project] in pyproject.toml). "
+        "Clone the repo and point DREAMO_SRC at the directory that contains "
+        "the inner package folder `dreamo/` (i.e. .../DreamO/dreamo/dreamo_pipeline.py).\n"
+        "  export DREAMO_SRC=/absolute/path/to/DreamO\n"
+        "Do NOT set DREAMO_SRC to .../DreamO/dreamo (one level too deep).\n"
+        f"Tried clone roots: {candidates}"
+    )
+    raise ImportError(hint)
+
+
 def _load_pipeline():
     """Load the DreamO pipeline (ByteDance/DreamO on FLUX.1-dev)."""
     global _pipeline
@@ -25,11 +90,7 @@ def _load_pipeline():
 
     logger.info("Loading DreamO pipeline from %s …", cfg.DREAMO_MODEL_ID)
 
-    if cfg.DREAMO_SRC:
-        root = str(Path(cfg.DREAMO_SRC).resolve())
-        if root not in sys.path:
-            sys.path.insert(0, root)
-            logger.info("DreamO: prepended DREAMO_SRC to sys.path: %s", root)
+    _ensure_dreamo_path()
 
     from dreamo.dreamo_pipeline import DreamOPipeline
 
