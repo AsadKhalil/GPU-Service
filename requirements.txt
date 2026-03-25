@@ -9,6 +9,8 @@ fastapi
 uvicorn[standard]
 pillow
 requests
+# DreamO imports cv2; use headless build in Docker/GPU images (no libGL.so.1).
+opencv-python-headless>=4.8.0
 # DreamO (try-on + twin): NOT installable via pip — upstream repo has no package
 # metadata. Clone https://github.com/bytedance/DreamO and set:
 #   export DREAMO_SRC=/path/to/DreamO

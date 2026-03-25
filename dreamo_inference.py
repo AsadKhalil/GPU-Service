@@ -18,13 +18,23 @@ _pipeline = None
 
 
 def _dreamo_import_ok() -> bool:
+    """
+    Return True if dreamo.dreamo_pipeline imports cleanly.
+
+    Only ``ModuleNotFoundError`` for the ``dreamo`` package means "wrong
+    sys.path". Other errors (e.g. OpenCV ``libGL.so.1`` in headless containers)
+    must propagate so the user sees the real fix, not a misleading clone hint.
+    """
     try:
         import importlib
 
         importlib.import_module("dreamo.dreamo_pipeline")
         return True
-    except ImportError:
-        return False
+    except ModuleNotFoundError as e:
+        missing = e.name or ""
+        if missing == "dreamo" or missing.startswith("dreamo."):
+            return False
+        raise
 
 
 def _ensure_dreamo_path() -> None:
@@ -48,14 +58,13 @@ def _ensure_dreamo_path() -> None:
             here.parent / "DreamO",
             here.parent / "dreamo-main",
             here.parent / "dreamo",
-            # e.g. .../workspace/GPU-Service → .../workspace/DreamO
-            here.parent.parent / "DreamO",
-            here.parent.parent / "dreamo",
-            # common Vast layout
             Path("/workspace/DreamO"),
             Path("/workspace/dreamo"),
         ]
     )
+    grand = here.parent.parent.resolve()
+    if grand != Path("/"):
+        candidates.extend([grand / "DreamO", grand / "dreamo"])
 
     seen: set[Path] = set()
     for root in candidates:
@@ -83,7 +92,8 @@ def _ensure_dreamo_path() -> None:
         "the inner package folder `dreamo/` (i.e. .../DreamO/dreamo/dreamo_pipeline.py).\n"
         "  export DREAMO_SRC=/absolute/path/to/DreamO\n"
         "Do NOT set DREAMO_SRC to .../DreamO/dreamo (one level too deep).\n"
-        f"Tried clone roots: {candidates}"
+        "Verify: test -f $DREAMO_SRC/dreamo/dreamo_pipeline.py\n"
+        f"Searched these clone roots (need dreamo/dreamo_pipeline.py): {candidates}"
     )
     raise ImportError(hint)
 
