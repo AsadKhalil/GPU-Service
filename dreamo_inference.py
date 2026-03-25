@@ -48,6 +48,12 @@ def _ensure_dreamo_path() -> None:
             here.parent / "DreamO",
             here.parent / "dreamo-main",
             here.parent / "dreamo",
+            # e.g. .../workspace/GPU-Service → .../workspace/DreamO
+            here.parent.parent / "DreamO",
+            here.parent.parent / "dreamo",
+            # common Vast layout
+            Path("/workspace/DreamO"),
+            Path("/workspace/dreamo"),
         ]
     )
 
