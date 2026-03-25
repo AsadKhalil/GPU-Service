@@ -9,3 +9,6 @@ fastapi
 uvicorn[standard]
 pillow
 requests
+# Virtual try-on + twin (import dreamo.*). If pip conflicts with diffusers, install
+# this line last: pip install git+https://github.com/bytedance/DreamO.git
+dreamo @ git+https://github.com/bytedance/DreamO.git

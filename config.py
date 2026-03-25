@@ -31,6 +31,10 @@ DREAMO_GUIDANCE_SCALE = float(os.getenv("DREAMO_GUIDANCE_SCALE", "3.5"))
 DREAMO_WIDTH = int(os.getenv("DREAMO_WIDTH", "768"))
 DREAMO_HEIGHT = int(os.getenv("DREAMO_HEIGHT", "1024"))
 
+# Cloned DreamO without `pip install -e .`? Set to repo root (dir containing
+# the `dreamo/` package folder).
+DREAMO_SRC = os.getenv("DREAMO_SRC", "").strip()
+
 # ── Base URL for result links ────────────────────────────────────────────────
 # When using ngrok, set BASE_URL to your ngrok URL (e.g. https://abc123.ngrok-free.app)
 # so that result image URLs are accessible externally.

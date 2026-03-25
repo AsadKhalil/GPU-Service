@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import sys
 import uuid
 from io import BytesIO
 from pathlib import Path
@@ -23,6 +24,12 @@ def _load_pipeline():
         return _pipeline
 
     logger.info("Loading DreamO pipeline from %s …", cfg.DREAMO_MODEL_ID)
+
+    if cfg.DREAMO_SRC:
+        root = str(Path(cfg.DREAMO_SRC).resolve())
+        if root not in sys.path:
+            sys.path.insert(0, root)
+            logger.info("DreamO: prepended DREAMO_SRC to sys.path: %s", root)
 
     from dreamo.dreamo_pipeline import DreamOPipeline
 

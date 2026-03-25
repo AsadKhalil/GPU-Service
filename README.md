@@ -252,3 +252,13 @@ curl http://localhost:8001/status/<job_id> | python -m json.tool
 | ngrok free tier limits | Use `BASE_URL` env var; consider Cloudflare Tunnel as a free alternative |
 | `Twin generation requires INFERENCE_BACKEND=dreamo` | Set `INFERENCE_BACKEND=dreamo` — twin gen only works with DreamO |
 | Slow first request | Expected — model loads into VRAM on first inference. Subsequent requests are faster. |
+
+
+
+cd /workspace/GPU-Service
+source .venv/bin/activate
+
+pip uninstall -y torch torchvision torchaudio
+
+# Prefer cu124 — matches your image and works with your driver
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
