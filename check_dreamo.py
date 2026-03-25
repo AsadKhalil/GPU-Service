@@ -30,3 +30,10 @@ di._ensure_dreamo_path()
 import dreamo.dreamo_pipeline  # noqa: E402, F401
 
 print("dreamo OK")
+print(
+    "Note: bare python -c import dreamo… from this directory skips "
+    "_ensure_dreamo_path(). Use this script, main.py, or set PYTHONPATH to "
+    "your DreamO clone root, e.g.\n"
+    "  PYTHONPATH=/workspace/DreamO python -c "
+    "'import dreamo.dreamo_pipeline; print(\"dreamo OK\")'"
+)

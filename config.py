@@ -24,7 +24,12 @@ INFERENCE_BACKEND = os.getenv("INFERENCE_BACKEND", "catvton").lower()
 
 # ── DreamO settings ──────────────────────────────────────────────────────────
 DREAMO_MODEL_ID = os.getenv("DREAMO_MODEL_ID", "ByteDance/DreamO")
-DREAMO_BASE_MODEL = os.getenv("DREAMO_BASE_MODEL", "black-forest-labs/FLUX.1-dev")
+# Gated on HF: accept the license on the model page; set HF_TOKEN or
+# huggingface-cli login before first download.
+DREAMO_BASE_MODEL = os.getenv(
+    "DREAMO_BASE_MODEL",
+    "black-forest-labs/FLUX.1-dev",
+)
 DREAMO_QUANTIZE = os.getenv("DREAMO_QUANTIZE", "int8")  # none | int8 | nunchaku
 DREAMO_NUM_STEPS = int(os.getenv("DREAMO_NUM_STEPS", "12"))
 DREAMO_GUIDANCE_SCALE = float(os.getenv("DREAMO_GUIDANCE_SCALE", "3.5"))

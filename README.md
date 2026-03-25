@@ -253,3 +253,4 @@ curl http://localhost:8001/status/<job_id> | python -m json.tool
 | `Twin generation requires INFERENCE_BACKEND=dreamo` | Set `INFERENCE_BACKEND=dreamo` — twin gen only works with DreamO |
 | Slow first request | Expected — model loads into VRAM on first inference. Subsequent requests are faster. |
 | `libGL.so.1` / OpenCV import error | Use headless OpenCV: `pip uninstall -y opencv-python opencv-contrib-python && pip install opencv-python-headless` (or install system `libgl1` in the container). |
+| `GatedRepoError` / `FLUX.1-dev` 401 | On [huggingface.co/black-forest-labs/FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) accept the license while logged in. Create a **read** token at [Settings → Access Tokens](https://huggingface.co/settings/tokens). On the GPU: `export HF_TOKEN=hf_...` or `huggingface-cli login`. Do the same if `ByteDance/DreamO` is gated. |
