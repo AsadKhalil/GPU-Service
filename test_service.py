@@ -49,7 +49,7 @@ def check_gpu():
             print(f"[OK] CUDA available — {count} device(s)")
             for i in range(count):
                 props = torch.cuda.get_device_properties(i)
-                vram = props.total_mem // 1024**2
+                vram = props.total_memory // 1024**2
                 print(f"     GPU {i}: {props.name} ({vram} MB VRAM)")
                 if vram < 4000:
                     errors.append(f"GPU {i} has only {vram} MB VRAM (need >= 4 GB)")

@@ -130,7 +130,7 @@ def health():
             "device_count": torch.cuda.device_count(),
             "current_device": torch.cuda.current_device(),
             "device_name": torch.cuda.get_device_name(0),
-            "vram_total_mb": round(torch.cuda.get_device_properties(0).total_mem / 1024**2),
+            "vram_total_mb": round(torch.cuda.get_device_properties(0).total_memory / 1024**2),
             "vram_allocated_mb": round(torch.cuda.memory_allocated(0) / 1024**2),
             "vram_reserved_mb": round(torch.cuda.memory_reserved(0) / 1024**2),
         }
@@ -214,6 +214,6 @@ if __name__ == "__main__":
         logger.info(
             "GPU: %s | VRAM: %d MB",
             torch.cuda.get_device_name(0),
-            torch.cuda.get_device_properties(0).total_mem // 1024**2,
+            torch.cuda.get_device_properties(0).total_memory // 1024**2,
         )
     uvicorn.run(app, host=cfg.HOST, port=cfg.PORT)
