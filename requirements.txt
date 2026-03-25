@@ -1,0 +1,11 @@
+torch>=2.1.0
+torchvision
+diffusers>=0.30.0
+transformers>=4.38.0
+accelerate>=0.28.0
+sentencepiece
+protobuf
+fastapi
+uvicorn[standard]
+pillow
+requests
